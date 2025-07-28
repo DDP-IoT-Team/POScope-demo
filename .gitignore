@@ -1,0 +1,9 @@
+# python virtual environment
+app_env/
+
+# secrets
+.streamlit/secrets.toml
+
+# test file
+test.py
+
