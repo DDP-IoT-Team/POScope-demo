@@ -177,10 +177,10 @@ def set_session_state_pos(df_cus: pd.DataFrame, df_itm: pd.DataFrame) -> None:
     st.session_state["df_items"] = df_itm
 
     # These session states are used to show information about the uploaded POS data
-    st.session_state["west_date_min"] = df_cus.query('アカウント名 == "西食堂"')["会計日時"].min()
-    st.session_state["east_date_min"] = df_cus.query('アカウント名 == "東カフェテリア"')["会計日時"].min()
-    st.session_state["west_date_max"] = df_cus.query('アカウント名 == "西食堂"')["会計日時"].max()
-    st.session_state["east_date_max"] = df_cus.query('アカウント名 == "東カフェテリア"')["会計日時"].max()
+    st.session_state["west_date_min"] = df_cus.query('アカウント名 == "西食堂"')["開始日時"].min()
+    st.session_state["east_date_min"] = df_cus.query('アカウント名 == "東カフェテリア"')["開始日時"].min()
+    st.session_state["west_date_max"] = df_cus.query('アカウント名 == "西食堂"')["開始日時"].max()
+    st.session_state["east_date_max"] = df_cus.query('アカウント名 == "東カフェテリア"')["開始日時"].max()
     
     stores = df_cus["アカウント名"].unique().tolist()
     if "西食堂" in stores:
@@ -357,7 +357,8 @@ with st.container(border=True):
         type=["zip"], 
         accept_multiple_files=True, 
         key="uploaded_zip_pos", 
-        on_change=when_zip_pos_changed
+        on_change=when_zip_pos_changed, 
+        disabled=True
     )
     if st.button(label="使用するデータを決定する", key="button_pos", disabled=button_controller("uploaded_zip_pos")):
         with st.spinner("データを読み込んでいます...", show_time=True):
@@ -382,11 +383,17 @@ with st.container(border=True):
                     データ形式が正しくない可能性があります。
                     """
                 )
+    # Load sample POS data
+    if st.button(label="サンプルデータを読み込む", key="button_pos_sample"):
+        with st.spinner("データを読み込んでいます...", show_time=True):
+            df_customers = pd.read_excel("static/demo-customers2024.xlsx")
+            df_items = pd.read_excel("static/demo-items2024.xlsx")
+            set_session_state_pos(df_customers, df_items)
     # Information about the uploaded POS data
     messages = get_uploaded_pos_info()
     st.info(
         f"""
-        :material/check_circle: アップロードされているPOSデータ
+        :material/check_circle: アップロードされているPOSデータ（サンプル）
          - 西食堂：{messages[0]}
          - 東カフェテリア：{messages[1]}
         """
@@ -403,7 +410,8 @@ with st.container(border=True):
         type=["xlsx"], 
         accept_multiple_files=False, 
         key="uploaded_syllabus", 
-        on_change=when_syllabus_changed
+        on_change=when_syllabus_changed, 
+        disabled=True
     )
     if st.button(label="使用するデータを決定する", key="button_syllabus", disabled=button_controller("uploaded_syllabus")):
         with st.spinner("データを読み込んでいます...", show_time=True):
@@ -427,11 +435,17 @@ with st.container(border=True):
                     データ形式が正しくない可能性があります。
                     """
                 )
+    # Load sample syllabus data
+    if st.button(label="サンプルデータを読み込む", key="button_syllabus_sample"):
+        with st.spinner("データを読み込んでいます...", show_time=True):
+            df_slb_west = pd.read_excel("static/demo-syllabus2024-2025fh.xlsx", sheet_name="west", index_col=[0, 1])
+            df_slb_east = pd.read_excel("static/demo-syllabus2024-2025fh.xlsx", sheet_name="east", index_col=[0, 1])
+            set_session_state_syllabus(df_slb_west, df_slb_east)
     # Information about the uploaded POS data
     messages = get_uploaded_syllabus_info()
     st.info(
         f"""
-        :material/check_circle: アップロードされている履修者数データ
+        :material/check_circle: アップロードされている履修者数データ（サンプル）
          - 西キャンパス：{messages[0]}
          - 東キャンパス：{messages[1]}
         """
@@ -501,7 +515,8 @@ with st.container(border=True):
         type=["xlsx"], 
         accept_multiple_files=False, 
         key="uploaded_calendar", 
-        on_change=when_calendar_changed
+        on_change=when_calendar_changed, 
+        disabled=True
     )
     if st.button(label="使用するデータを決定する", key="button_calendar", disabled=button_controller("uploaded_calendar")):
         with st.spinner("データを読み込んでいます...", show_time=True):
@@ -525,11 +540,16 @@ with st.container(border=True):
                     データ形式が正しくない可能性があります。
                     """
                 )
+    # Load sample calendar data
+    if st.button(label="サンプルデータを読み込む", key="button_calendar_sample"):
+        with st.spinner("データを読み込んでいます...", show_time=True):
+            df_cal = pd.read_excel("static/demo-calendar2024-2025fh.xlsx")
+            set_session_state_calendar(df_cal)
     # Information about the uploaded calendar data
     message = get_uploaded_calendar_info()
     st.info(
         f"""
-        :material/check_circle: アップロードされているカレンダー形式データ
+        :material/check_circle: アップロードされているカレンダー形式データ（サンプル）
          - 期間：{message}
         """
     )
