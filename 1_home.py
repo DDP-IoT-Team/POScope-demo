@@ -36,6 +36,14 @@ st.logo(
     icon_image=favicon
 )
 
+# Demo
+st.warning(
+    """
+    **このアプリはデモ版です。** \\
+    「アップロード」ページで読み込まれるサンプルデータは、実際のデータの特徴を模しながら疑似的に生成されたものであることにご注意ください。
+    """
+)
+
 st.header("ホーム")
 
 # notifications
@@ -91,7 +99,7 @@ with col2:
         st.write("##### :material/contact_mail: お問い合わせ")
         st.markdown(
             f"""
-             - Google Formsは[こちら]({st.secrets["google_forms"]["get_help"]})
+             - Google Formsは[こちら]({st.secrets["google_forms"]["contact"]})
             """
         )
 
